@@ -1,0 +1,32 @@
+# IDE
+.idea/
+*.iml
+.vscode/
+.project
+.classpath
+.settings/
+
+# Build
+target/
+build/
+out/
+*.class
+*.jar
+!docker/
+
+# Logs
+logs/
+*.log
+*.log.*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Env
+.env
+.env.local
+application-local.yml
+
+# Maven
+.mvn/wrapper/maven-wrapper.jar

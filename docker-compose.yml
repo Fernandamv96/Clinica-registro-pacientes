@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: clinica-postgres
+    environment:
+      POSTGRES_DB: clinica_db
+      POSTGRES_USER: clinica
+      POSTGRES_PASSWORD: ***REMOVED***
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U clinica -d clinica_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - clinica-net
+
+  backend:
+    build: .
+    container_name: clinica-backend
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DB_URL: jdbc:postgresql://postgres:5432/clinica_db
+      DB_USER: clinica
+      DB_PASSWORD: ***REMOVED***
+      JWT_SECRET: ${JWT_SECRET:***REMOVED***}
+      JWT_EXPIRATION_MS: 86400000
+      SPRING_PROFILES_ACTIVE: prod
+    ports:
+      - "8080:8080"
+    networks:
+      - clinica-net
+
+volumes:
+  postgres_data:
+
+networks:
+  clinica-net:
+    driver: bridge
