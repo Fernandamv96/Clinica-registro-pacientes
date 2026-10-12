@@ -1,0 +1,7 @@
+# Configuración de gitleaks: reglas por defecto + allowlist mínimo y justificado.
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Clave JWT usada solo por los tests (H2 en memoria); no protege ningún entorno real."
+paths = ['''src/test/resources/application-test\.yml''']
