@@ -21,7 +21,7 @@ public final class RutValidator {
     /** Normaliza: mayúsculas, sin puntos ni guión, conserva el DV. */
     public static String normalize(String rut) {
         if (rut == null) return null;
-        return rut.replaceAll("[.\\s]", "").toUpperCase();
+        return rut.replaceAll("[.\\s-]", "").toUpperCase();
     }
 
     public static boolean isValid(String rut) {
