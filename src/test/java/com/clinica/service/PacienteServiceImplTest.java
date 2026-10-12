@@ -72,7 +72,8 @@ class PacienteServiceImplTest {
 
     @Test
     void shouldFindById() {
-        Paciente p = Paciente.builder().id(1L).rut("123456785").nombreCompleto("Test").build();
+        Paciente p = Paciente.builder().rut("123456785").nombreCompleto("Test").build();
+        p.setId(1L);
         when(pacienteRepository.findById(1L)).thenReturn(Optional.of(p));
 
         Paciente result = service.findById(1L);
@@ -90,7 +91,8 @@ class PacienteServiceImplTest {
 
     @Test
     void shouldDelete() {
-        Paciente p = Paciente.builder().id(1L).build();
+        Paciente p = Paciente.builder().build();
+        p.setId(1L);
         when(pacienteRepository.findById(1L)).thenReturn(Optional.of(p));
 
         service.delete(1L);
