@@ -30,3 +30,7 @@ application-local.yml
 
 # Maven
 .mvn/wrapper/maven-wrapper.jar
+
+# Env (cualquier variante, salvo el ejemplo)
+.env.*
+!.env.example
