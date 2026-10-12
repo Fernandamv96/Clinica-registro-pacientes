@@ -3,25 +3,24 @@
 # ============================================
 
 # ---- Etapa 1: Build ----
-FROM eclipse-temurin:21-jdk-alpine AS builder
+FROM maven:3.9-eclipse-temurin-21-alpine AS builder
 WORKDIR /app
 
 # Cache de dependencias
 COPY pom.xml .
-COPY .mvn .mvn
-COPY mvnw .
-RUN chmod +x mvnw && ./mvnw dependency:go-offline -B || true
+RUN mvn -B -q dependency:go-offline || true
 
 # Copia del código y build
 COPY src src
-RUN ./mvnw clean package -DskipTests
+RUN mvn -B -q clean package -DskipTests
 
 # ---- Etapa 2: Runtime ----
 FROM eclipse-temurin:21-jre-alpine
 WORKDIR /app
 
 # Usuario no-root por seguridad
-RUN addgroup -S spring && adduser -S spring -G spring
+RUN addgroup -S spring && adduser -S spring -G spring \
+    && mkdir -p /app/logs && chown spring:spring /app/logs
 USER spring:spring
 
 COPY --from=builder /app/target/*.jar app.jar
