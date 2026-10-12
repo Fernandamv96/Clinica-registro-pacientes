@@ -14,7 +14,7 @@ spring:
   datasource:
     url: ${DB_URL:jdbc:postgresql://localhost:5432/clinica_db}
     username: ${DB_USER:clinica}
-    password: ${DB_PASSWORD:***REMOVED***}
+    password: ${DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
     hikari:
       maximum-pool-size: 10
@@ -43,12 +43,12 @@ spring:
       max-file-size: 5MB
       max-request-size: 5MB
 
-# Configuración de JWT (en producción: usar variable de entorno y/o Vault)
+# Configuración de JWT: JWT_SECRET es obligatorio (sin valor por defecto)
 app:
   jwt:
     # Clave Base64 de al menos 256 bits (32 bytes). Generar con:
     # openssl rand -base64 64
-    secret: ${JWT_SECRET:***REMOVED***}
+    secret: ${JWT_SECRET}
     expiration-ms: ${JWT_EXPIRATION_MS:86400000} # 24h
 
 springdoc:
