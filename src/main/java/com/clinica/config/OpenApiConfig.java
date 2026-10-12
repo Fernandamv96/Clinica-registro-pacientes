@@ -20,9 +20,9 @@ public class OpenApiConfig {
                         .version("1.0.0")
                         .description("API REST para gestión de pacientes, historial clínico y usuarios")
                         .contact(new Contact()
-                                .name("Equipo Clínica")
-                                .email("dev@clinica.cl"))
-                        .license(new License().name("Privada")))
+                                .name("Fernandamv96")
+                                .url("https://github.com/Fernandamv96/Clinica-registro-pacientes"))
+                        .license(new License().name("MIT").url("https://opensource.org/licenses/MIT")))
                 .components(new Components()
                         .addSecuritySchemes("bearerAuth",
                                 new SecurityScheme()
