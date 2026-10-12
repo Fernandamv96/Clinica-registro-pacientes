@@ -6,6 +6,7 @@ import com.clinica.repository.RolRepository;
 import com.clinica.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -26,6 +27,9 @@ public class DataInitializer implements CommandLineRunner {
     private final UsuarioRepository usuarioRepository;
     private final PasswordEncoder passwordEncoder;
 
+    @Value("${ADMIN_INITIAL_PASSWORD:}")
+    private String adminInitialPassword;
+
     @Override
     @Transactional
     public void run(String... args) {
@@ -40,20 +44,24 @@ public class DataInitializer implements CommandLineRunner {
             }
         }
 
-        // 2) Crear admin por defecto
+        // 2) Crear admin inicial solo si se entrega ADMIN_INITIAL_PASSWORD
         if (!usuarioRepository.existsByUsername("admin")) {
+            if (adminInitialPassword == null || adminInitialPassword.isBlank()) {
+                log.warn("ADMIN_INITIAL_PASSWORD no definido: no se crea el usuario admin");
+                return;
+            }
             Rol adminRol = rolRepository.findByNombre(Rol.RolNombre.ADMIN)
                     .orElseThrow(() -> new IllegalStateException("Rol ADMIN no existe"));
             Usuario admin = Usuario.builder()
                     .username("admin")
                     .email("admin@clinica.cl")
-                    .password(passwordEncoder.encode("***REMOVED***"))
+                    .password(passwordEncoder.encode(adminInitialPassword))
                     .nombreCompleto("Administrador del Sistema")
                     .activo(true)
                     .roles(Set.of(adminRol))
                     .build();
             usuarioRepository.save(admin);
-            log.info("Usuario admin creado (password: ***REMOVED***)");
+            log.info("Usuario admin creado");
         }
     }
 }
