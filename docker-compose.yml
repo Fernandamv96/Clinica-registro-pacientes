@@ -33,6 +33,7 @@ services:
       JWT_SECRET: ${JWT_SECRET:?Define JWT_SECRET en .env (openssl rand -base64 64)}
       JWT_EXPIRATION_MS: ${JWT_EXPIRATION_MS:-86400000}
       ADMIN_INITIAL_PASSWORD: ${ADMIN_INITIAL_PASSWORD:-}
+      APP_CORS_ALLOWED_ORIGINS: ${APP_CORS_ALLOWED_ORIGINS:-http://localhost:*}
       SPRING_PROFILES_ACTIVE: prod
     ports:
       - "8080:8080"

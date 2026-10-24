@@ -63,6 +63,7 @@ mvn spring-boot:run
 | `JWT_SECRET` | **sí** | Clave Base64 de ≥ 256 bits |
 | `JWT_EXPIRATION_MS` | no | Expiración del token (por defecto 24 h) |
 | `ADMIN_INITIAL_PASSWORD` | no | Si se define, crea el usuario `admin` al primer arranque |
+| `APP_CORS_ALLOWED_ORIGINS` | no | Orígenes permitidos por CORS, separados por coma (por defecto `http://localhost:*`) |
 
 ## Endpoints
 
