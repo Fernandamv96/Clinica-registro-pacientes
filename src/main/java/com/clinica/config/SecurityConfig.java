@@ -3,6 +3,7 @@ package com.clinica.config;
 import com.clinica.security.JwtAuthenticationFilter;
 import com.clinica.security.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -39,6 +40,10 @@ public class SecurityConfig {
     private final JwtAuthenticationFilter jwtAuthFilter;
     private final UserDetailsServiceImpl userDetailsService;
 
+    /** Orígenes permitidos por CORS, separados por coma (variable de entorno APP_CORS_ALLOWED_ORIGINS). */
+    @Value("${app.cors.allowed-origins:http://localhost:*}")
+    private String[] allowedOrigins;
+
     private static final String[] PUBLIC_ENDPOINTS = {
             "/auth/login",
             "/v3/api-docs/**",
@@ -51,6 +56,8 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+                // La API es stateless y autentica con JWT en el header Authorization (no usa cookies),
+                // así que el navegador no envía credenciales automáticamente y CSRF no aplica.
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -86,10 +93,11 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration cfg = new CorsConfiguration();
-        cfg.setAllowedOriginPatterns(List.of("*"));
+        cfg.setAllowedOriginPatterns(List.of(allowedOrigins));
         cfg.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
         cfg.setAllowedHeaders(List.of("*"));
-        cfg.setAllowCredentials(true);
+        // El JWT viaja en un header explícito, no en cookies: no hace falta permitir credenciales.
+        cfg.setAllowCredentials(false);
         cfg.setMaxAge(3600L);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
